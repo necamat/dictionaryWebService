@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE dictionary SYSTEM "dictionary.dtd">
+<dictionary>
+    <language lg="sr">
+        <word id="1">kuca</word>
+        <word id="2">drvo</word>
+        <word id="3">jabuka</word>
+    </language>
+    <language lg="en">
+        <word id="1">house</word>
+        <word id="2">wood</word>
+        <word id="3">appel</word>
+    </language>
+    <language lg="fr">
+        <word id="1">maison</word>
+        <word id="2">bois</word>
+        <word id="3">pomme</word>
+    </language>
+</dictionary>
