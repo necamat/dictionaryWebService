@@ -30,7 +30,7 @@ public class Dictionary {
     @GET
     @Path("{word}/{language1}/{language2}")
     @Produces(MediaType.APPLICATION_JSON)
-    public String getXml(@PathParam ("word") String word,
+    public String translate(@PathParam ("word") String word,
                          @PathParam ("language1") String language1,
                          @PathParam ("language2") String language2) {
        
