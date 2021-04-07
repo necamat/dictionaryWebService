@@ -19,10 +19,11 @@ import org.xml.sax.SAXException;
 public class DictionaryServiceImpl implements DictionaryService {
 
     //Path to the xml file
-    private final String PATH = "C:\\Users\\hp\\Desktop\\GitHub\\dictionaryWebService\\DictionaryWebService\\xml\\dictionary.xml";
-    // private static final String PATH = "your/path/to/dictionary.xml";
+    private final String PATH = "your/path/to/dictionary.xml";
 
-    //Method returns the  Xml document
+    /*
+    **Method returns the  Xml document
+    */
     private Document readData() {
 
         try {
@@ -32,16 +33,18 @@ public class DictionaryServiceImpl implements DictionaryService {
 
             return db.parse(PATH);
         } catch (ParserConfigurationException ex) {
-            Logger.getLogger(DictionaryServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
+            ex.printStackTrace();
         } catch (SAXException ex) {
-            Logger.getLogger(DictionaryServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
+            ex.printStackTrace();
         } catch (IOException ex) {
-            Logger.getLogger(DictionaryServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
+            ex.printStackTrace();
         }
         return null;
     }
 
-    //Method returns the id of the searched word, if the searched word does not exist it return empty String
+    /*
+    **Method returns the id of the searched word, if the searched word does not exist it return empty String
+    */
     private String idWord(NodeList res, String wordTr) {
 
         for (int i = 0; i < res.getLength(); i++) {
@@ -56,6 +59,11 @@ public class DictionaryServiceImpl implements DictionaryService {
         }
         return "";
     }
+    
+    /*
+    ** Method return the translated word if the word we want to translate exists in our dictionary. In the absence of a word or a poorly loaded Xml dictionary, it prints the appropriate message.
+    ** The choice of a non-existent language has not been processed, as it is envisaged that the client will not allow free input of the language. See details in the Instructions.
+    */
 
     @Override
     public String translate(String word, String language1, String language2) {
@@ -72,21 +80,21 @@ public class DictionaryServiceImpl implements DictionaryService {
                 
             try {
 
-            //Kreiranje objekta XPathFactory uz pomoc kog dobijamo XPath objekat
+            // Creating  XPathFactory object with which we get  XPath object
             XPathFactory xpf = XPathFactory.newInstance();
             XPath xp = xpf.newXPath();
 
-            //Kreiranje objekta tipa XPathExpression koji prestavlja Xpath izraz. Izraz vraca sve reci sa jezika sa kog smo izabrali da se prevodi rec
+            // Create XPathExpression object that represents an Xpath expression. The expression returns all words from the language from which we chose to translate the word
             XPathExpression xpe = xp.compile("//language[@lg = '" + language1 + "']/word");
 
             NodeList res = (NodeList) xpe.evaluate(doc, XPathConstants.NODESET);
             // System.out.println(res.getLength());
 
-            // id trazene reci
+            // Id search words
             String id = idWord(res, wordTr);
             if (!(id.equals(""))) {
 
-                //Kreiranje objekta tipa XPathExpression koji prestavlja Xpath izraz. Izraz vraca sve reci na jeziku na koji smo izabrali da se prevede rec
+                // Create  XPathExpression object that represents an Xpath expression. The phrase returns all words in the language we have chosen to translate the word
                 XPathExpression xpe1 = xp.compile("//language[@lg = '" + language2 + "']/word");
 
                 NodeList res1 = (NodeList) xpe1.evaluate(doc, XPathConstants.NODESET);
@@ -97,10 +105,9 @@ public class DictionaryServiceImpl implements DictionaryService {
                     Node n = res1.item(i);
 
                     if (n.getAttributes().item(0).getNodeValue().equals(id)) {
+                        
                         translateWorrd = n.getTextContent();
-
                     }
-
                 }
             } else {
 
@@ -108,8 +115,11 @@ public class DictionaryServiceImpl implements DictionaryService {
             }
 
         } catch (XPathExpressionException ex) {
-            Logger.getLogger(DictionaryServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
-        }}
+            ex.printStackTrace();
+        }}else{
+                
+            translateWorrd = "Service is currently down, please try again later.";
+         }
         return translateWorrd;
     }
 
